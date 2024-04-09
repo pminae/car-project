@@ -28,6 +28,24 @@ function CarAdd() {
         })
     }
 
+    //폼태그 객체 생성
+    //<form><input name="uploadFiles" value=""/></form>
+    const carFormData = new FormData();
+
+    //파일 타입의 input에 변경이 일어났을 때 (이미지를 등록했을 때)
+    const onChangeImage = (e)=>{
+        //name : uploadFiles
+        const {name} = e.target;
+        console.dir(e.target);
+        //파일이 업로드 되었을 때 이벤트가 발생한 input의 files 속성이 있을 때
+        //files의 길이가 0보다 클 때
+        if (e.target.files && e.target.files.length>0){
+            //폼태그에 속성 추가하기
+            //<input name="upload" value = File/>
+            carFormData.append(name, e.target.files[0]);
+        }
+    }
+
     //input값 초기화
     const onReset = ()=>{
         setFormData({
@@ -41,21 +59,35 @@ function CarAdd() {
         })
     }
 
-    //로그인버튼 클릭 시 
+    //등록 버튼 클릭 시 
     const onSubmit=(e) => {
         //전송 요청 이벤트 제거
         e.preventDefault();
         //입력이 다 되었는지 체크 후 함수 호출
         if(formData.brand && formData.model && formData.color 
             && formData.registerNumber && formData.year && formData.price && formData.dealerId){
-            addCar();
+            carInsert();
         }
     }
 
     //carLogin 함수
-    async function addCar(){
+    async function carInsert(){
+        //form에 전달한 속성을 다 추가
+        carFormData.append("brand", formData.brand);
+        carFormData.append("model", formData.model);
+        carFormData.append("color", formData.color);
+        carFormData.append("registerNumber", formData.registerNumber);
+        carFormData.append("year", formData.year);
+        carFormData.append("price", formData.price);
+        carFormData.append("dealerId", formData.dealerId);
+
         try{
-            const response = await axios.post("http://localhost:8081/addCar", formData);
+            const response = await axios.post("http://localhost:8081/addCar", carFormData, {
+                //form 전송 ---> content type을 multipart/form-data로 수정
+                headers : {
+                    "Content-type":"multipart/form-data"
+                }
+            });
             //응답으로 "ok" or "fail"
             if(response.data == "ok"){
                 navigate("/");
@@ -96,6 +128,26 @@ function CarAdd() {
                         <tr>
                             <td>가격</td>
                             <td><input type="text" name="price" onChange={onChange} value={formData.price}/></td>
+                        </tr>
+                        <tr>
+                            <td>차량이미지1</td>
+                            <td><input type="file" className='custom-file-input' name="uploadFiles" onChange={onChangeImage}/></td>
+                        </tr>
+                        <tr>
+                            <td>차량이미지2</td>
+                            <td><input type="file" className='custom-file-input' name="uploadFiles" onChange={onChangeImage}/></td>
+                        </tr>
+                        <tr>
+                            <td>차량이미지3</td>
+                            <td><input type="file" className='custom-file-input' name="uploadFiles" onChange={onChangeImage}/></td>
+                        </tr>
+                        <tr>
+                            <td>차량이미지4</td>
+                            <td><input type="file" className='custom-file-input' name="uploadFiles" onChange={onChangeImage}/></td>
+                        </tr>
+                        <tr>
+                            <td>차량이미지5</td>
+                            <td><input type="file" className='custom-file-input' name="uploadFiles" onChange={onChangeImage}/></td>
                         </tr>
                         <tr>
                             <td colSpan={2}>

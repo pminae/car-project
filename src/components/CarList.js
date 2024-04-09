@@ -22,6 +22,7 @@ function CarList() {
             <table className='table'>
                 <thead>
                     <tr>
+                        <th>차량이미지</th>
                         <th>브랜드</th>
                         <th>모델</th>
                         <th>색상</th>
@@ -32,6 +33,7 @@ function CarList() {
                     {/* 서버에서 list로 보내면 배열로 받는다 */}
                     {data.map((car,index)=>
                         <tr key={index}>
+                            <td><img src={"http://localhost:8081/image?image="+car.imgName} width={200}/></td>
                             <td>{car.brand}</td>
                             <td>{car.model}</td>
                             <td>{car.color}</td>
